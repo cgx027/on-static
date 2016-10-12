@@ -1,0 +1,16 @@
+{
+  "httpEndpoints": [
+    {
+      "address": "0.0.0.0",
+      "port": 8080,
+      "routers": "northbound"
+    },
+    {
+      "address": "172.31.128.1",
+      "port": 9080,
+      "routers": "southbound"
+    }
+  ],
+  "staticRootDir": "./static/files",
+  "httpFileServiceApiRoot": "/"
+}
