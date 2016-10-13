@@ -30,7 +30,7 @@ function Runner(
     var defaultEndpoints = [
         {
             "address": "0.0.0.0",
-            "port": 8080,
+            "port": 9090,
             "routers": "northbound"
         },
         {
@@ -43,11 +43,12 @@ function Runner(
     function start() {
         return Promise.resolve()
             .then(function () {
-                logger.info('debug, in service start');
                 var endpoints = configuration.get('httpEndpoints', defaultEndpoints);
                 services = Promise.map(endpoints, function (endpoint) {
                     return new HttpService(endpoint);
-                })
+                }).each(function (service) {
+                    return service.start();
+                });
 
                 return services;
             });
