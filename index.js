@@ -22,6 +22,7 @@ function run() {
             helper.requireWrapper('bluebird', 'Promise'),
             helper.requireWrapper('express', 'express'),
             helper.requireWrapper('serve-index', 'serve-index'),
+            helper.requireWrapper('node-uuid', 'uuid'),
             require('./app'),
 
             // Glob Requirables

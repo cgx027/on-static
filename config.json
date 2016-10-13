@@ -11,6 +11,7 @@
       "routers": "southbound"
     }
   ],
-  "staticRootDir": "./static/files",
-  "httpFileServiceApiRoot": "/"
+  "httpFileServiceRootDir": "./static/files",
+  "httpFileServiceApiRoot": "/",
+  "tempDir": "/tmp/on-static/"
 }

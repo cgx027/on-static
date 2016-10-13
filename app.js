@@ -11,7 +11,6 @@ di.annotate(Runner, new di.Provide('app'));
 di.annotate(Runner, new di.Inject(
     'Http.Server',
     'Services.Configuration',
-    'fileService',
     'Logger',
     'Promise'
 )
@@ -19,7 +18,6 @@ di.annotate(Runner, new di.Inject(
 function Runner(
     HttpService,
     configuration,
-    fileService,
     Logger,
     Promise
 ) {
