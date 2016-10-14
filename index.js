@@ -23,6 +23,7 @@ function run() {
             helper.requireWrapper('express', 'express'),
             helper.requireWrapper('serve-index', 'serve-index'),
             helper.requireWrapper('node-uuid', 'uuid'),
+            helper.requireWrapper('validator', 'validator'),
             require('./app'),
 
             // Glob Requirables
@@ -36,8 +37,6 @@ function run() {
     var app = injector.get('app');
     var Logger = injector.get('Logger');
     var logger = Logger.initialize("main");
-
-
 
     app.start()
         .then(function () {
