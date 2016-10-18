@@ -2,18 +2,41 @@
   "httpEndpoints": [
     {
       "address": "0.0.0.0",
-      "port": 8080,
+      "port": 7070,
       "routers": "northbound"
     },
     {
-      "address": "10.62.59.150",
-      "port": 9080,
+      "address": "0.0.0.0",
+      "port": 9090,
       "routers": "southbound"
     }
   ],
   "httpFileServiceRootDir": "./static/files",
   "httpFileServiceApiRoot": "/",
   "tempDir": "/tmp/on-static/",
-  "inventoryFile": "./inventory.json",
-  "images": []
+  "isoDir": "./static/files/iso",
+  "inventoryFile": "./config.json",
+  "images": [
+    {
+      "id": "ef568f3c-5140-4f2d-8f96-8af93f47b164",
+      "iso": "http://10.62.59.209/static/images/ubuntu-16.04-server-amd64.iso",
+      "name": "ubuntu",
+      "version": "16.04",
+      "status": "OK"
+    },
+    {
+      "id": "1e7581aa-9bd3-4e40-b390-ba73ba9217cb",
+      "iso": "http://10.62.59.209/static/images/ubuntu-14.04.2-server-amd64.iso",
+      "name": "ubuntu",
+      "version": "14.04",
+      "status": "OK"
+    },
+    {
+      "id": "4fa6cf42-4161-4782-9f5b-c7515f7ddef2",
+      "iso": "rhel-7.0.iso",
+      "name": "rhel",
+      "version": "7.0",
+      "status": "OK"
+    }
+  ]
 }

@@ -24,6 +24,7 @@ function run() {
             helper.requireWrapper('serve-index', 'serve-index'),
             helper.requireWrapper('node-uuid', 'uuid'),
             helper.requireWrapper('validator', 'validator'),
+            helper.requireWrapper('mkdirp', 'mkdirp'),
             require('./app'),
 
             // Glob Requirables
