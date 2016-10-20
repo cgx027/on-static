@@ -12,14 +12,16 @@ di.annotate(Runner, new di.Inject(
     'Http.Server',
     'Services.Configuration',
     'Logger',
-    'Promise'
+    'Promise',
+    'Services.Inventory'
 )
 );
 function Runner(
     HttpService,
     configuration,
     Logger,
-    Promise
+    Promise,
+    Inventory
 ) {
     var logger = Logger.initialize("app");
 
@@ -40,6 +42,10 @@ function Runner(
 
     function start() {
         return Promise.resolve()
+            .then(function(){
+                // todo: add code to load configure at boot
+                return Inventory.loadConfigAtBoot();
+            })
             .then(function () {
                 var endpoints = configuration.get('httpEndpoints', defaultEndpoints);
                 services = Promise.map(endpoints, function (endpoint) {
