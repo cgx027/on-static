@@ -20,6 +20,11 @@ With `on-static`, users can
 * **Mount uploaded iso file** and expose it from http server.
 * **Manage iso** files. Users can list in-store iso files, upload a new iso file, delete a in-store iso file. 
 
+Two http server will be created by default:
+
+* The northbound: Handles user requests like managing(list/create/delete) an OS image, or managing(list/create/delete) an iso file.
+* The southbound: The http file server.
+
 ## installation
 
 Install on-static is quite straight forward.
@@ -29,9 +34,39 @@ Install on-static is quite straight forward.
     npm install
 
 ## running
+
     sudo node index.js
 
+The northbound API will by default listen at 0.0.0.0:7070, and the southbound will by default listen at 0.0.0.0:9090. Those IP addresses and ports are user configurable.
+
 ## API
+
+### northbound
+    http://0.0.0.0:7070/images: Get/list all OS images
+
+
+```
+curl http://0.0.0.0:7070/images | python -m json.tool
+{
+    "act": "Listing all imagesundefined",
+    "images": [
+        {
+            "id": "6807e9b2-a763-4b74-bfe9-4b20fe964400",
+            "iso": "client.iso",
+            "name": "photon",
+            "status": "OK",
+            "version": "6.0"
+        }
+    ],
+    "message": "Received get request for listing images",
+    "query": {}
+}
+ ```
+
+http://0.0.0.0:7070/iso
+
+
+### southbound
 
 ## Config
 
