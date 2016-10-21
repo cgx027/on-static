@@ -3,6 +3,10 @@
 __`on-static` is a tool that help [RackHD](https://github.com/rackhd) users to
 manage static file resources like os images.__
 
+RackHD has an built-in static file server that is used by OS install workflow. An small [setup script](https://github.com/RackHD/on-tools/blob/master/scripts/setup_iso.py) will help users to mount the os images. It's running great as long as the amount of managed nodes is not too many so that the static file server will not consume to much hardware resouces (CPU, memory, etc). 
+
+As long as users trying to scale up the managed nodes, they would think to move the static server out to a seperate hardware. RackHD allows user to use a standalone file server and on-static is meant to simplify the step to setup a standalone static file server, and provide a very easy way of managing os images and iso files. 
+
 Furture support may include management of other static resources
 like skupack, microkernel or overlayfs. __This is not implemented so far.__
 
@@ -35,6 +39,44 @@ Install on-static is quite straight forward.
     sudo node index.js
 
 The northbound API will by default listen at 0.0.0.0:7070, and the southbound will by default listen at 0.0.0.0:9090. Those IP addresses and ports are user configurable.
+
+## Use it with RackHD
+
+Assuming user already have a RackHD instance running and he/she wantted to install ubuntu to one of his/her nodes. 
+
+First, it will has to setup a unbutu image server. The setups are:
+
+1. Locate the unbutu iso file from somewhere. User can choose to download it by themselves or just ask on-static to download it instead. 
+2. Setup the ubuntu image server by send a PUT request to on-static northbound API, something look like:
+
+        curl -X PUT "http://10.62.59.150:7070/images?name=ubuntu&version=14.04&isoweb=http://10.62.59.150:9090/iso/photon-1.0.iso"
+
+    where on-static will help download the iso from the link specified. If user had download the iso by himself/herself, he/she can use following API to upload the image to on-static:
+        
+        curl -X PUT "http://10.62.59.150:7070/images?name=ubuntu&version=14.04&isoclient=client.iso" --upload-file path-to-file/test.iso
+
+3. Specify repo: "http://on-static-ip-addr:port/ubuntu/14.04" in the payload used in os install workflow. 
+
+    The API look like:
+
+        http://{{host}}/api/2.0/nodes/:identifier/workflows?name=Graph.InstallUbuntu
+
+    And the pay load look like:
+
+    ```
+    {
+        "options": {
+            "defaults": {
+                "version": "trusty",
+                "baseUrl": "install/netboot/ubuntu-installer/amd64",
+                "kargs": {
+                    "live-installer/net-image": "http://on-static-ip-addr:port/ubuntu/14.04/ubuntu/install/filesystem.squashfs"
+                },
+                "repo": "http://on-static-ip-addr:port/ubuntu/14.04"
+            }
+        }
+    }
+    ```
 
 ## API
 
@@ -173,31 +215,31 @@ The northbound API will by default listen at 0.0.0.0:7070, and the southbound wi
             }
             ```
 
-        3. DELETE http://0.0.0.0:7070/images: delete an OS images. two parameters are needed. 
-            * name: in query or body, the OS name. 
-            * version: in query of body, the OS version.
+    3. DELETE http://0.0.0.0:7070/images: delete an OS images. two parameters are needed. 
+        * name: in query or body, the OS name. 
+        * version: in query of body, the OS version.
 
-            ```
-            curl -X DELETE -H "Content-Type: application/json" -d '' "http://10.62.59.150:7070/iso?name=client.iso"
-            {
-                "message": "Received request for deleting iso files",
-                "query": {
-                    "name": "client.iso"
+        ```
+        curl -X DELETE -H "Content-Type: application/json" -d '' "http://10.62.59.150:7070/iso?name=client.iso"
+        {
+            "message": "Received request for deleting iso files",
+            "query": {
+                "name": "client.iso"
+            },
+            "iso": [
+                {
+                    "name": "centos-7.0.iso",
+                    "size": "4.15 GB",
+                    "upload": "2016-10-18T18:02:50.769Z"
                 },
-                "iso": [
-                    {
-                        "name": "centos-7.0.iso",
-                        "size": "4.15 GB",
-                        "upload": "2016-10-18T18:02:50.769Z"
-                    },
-                    {
-                        "name": "test.iso",
-                        "size": "1.00 KB",
-                        "upload": "2016-10-21T10:02:01.204Z"
-                    }
-                ]
-            }
-            ```
+                {
+                    "name": "test.iso",
+                    "size": "1.00 KB",
+                    "upload": "2016-10-21T10:02:01.204Z"
+                }
+            ]
+        }
+        ```
 
 * Ios file management
 
@@ -285,11 +327,26 @@ There are not much to be configured for on-static. The Configuration is set on o
   ],
   "httpFileServiceRootDir": "./static/files",
   "httpFileServiceApiRoot": "/",
-  "tempDir": "/tmp/on-static/",
   "isoDir": "./static/files/iso",
   "inventoryFile": "./config.json",
   "images": []
 }
 ```
+
+The Configurations explained as below:
+
+* httpEndpoints: the http endpoint settings. Each endpoint represent a http service, eight northbound or southbound. At lease one endpoint for northbound service and one endpoint for southbound service is a must have. More endpoints are also supported as per user configuration needs. Each endpoint has three parameters:
+    * address: the IP address that the service is listen on. Specially, 0.0.0.0 means by listen on all network interfaceses, 127.0.0.1 means only listen to local loop interface. 
+    * port: the IP address that the service is listen on.
+    * routers: should be one of northbound and southbound. 
+
+    Care should be taken when configuring the endpoints to makesure the IP address and port is not conflicting with other web services on the same server. 
+
+* httpFileServiceRootDir: the root dir that the sourcebound service will serve. It should be a relative path to the on-static root directory. Furture work can be added to support absolute path. 
+* httpFileServiceApiRoot: the API root for southbound service. 
+* isoDir: the dir where user uploaded iso files will be stored. Also a relative path.
+* inventoryFile: the file where user image settings are stored. This should ONLY be set to ./config.json' by now but can be refactored to be other files. 
+* images: the user image settings. Updated as per user calls southbound APIs. 
+
 
 ## Contributions are welcome
