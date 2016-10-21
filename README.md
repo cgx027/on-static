@@ -10,8 +10,6 @@ As long as users trying to scale up the managed nodes, they would think to move 
 Furture support may include management of other static resources
 like skupack, microkernel or overlayfs. __This is not implemented so far.__
 
-_Copyright 2015-2016, EMC, Inc._
-
 ## Introduction
 
 With `on-static`, users can
@@ -350,3 +348,6 @@ The Configurations explained as below:
 
 
 ## Contributions are welcome
+
+
+_Copyright 2015-2016, EMC, Inc._
