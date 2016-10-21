@@ -20,11 +20,16 @@ With `on-static`, users can
 * **Mount uploaded iso file** and expose it from http server.
 * **Manage iso** files. Users can list in-store iso files, upload a new iso file, delete a in-store iso file. 
 
-## Install
+## installation
 
 Install on-static is quite straight forward.
 
-    git clone 
+    git clone https://github.com/cgx027/on-static.git
+    cd on-static
+    npm install
+
+## running
+    sudo node index.js
 
 ## API
 
