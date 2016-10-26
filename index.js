@@ -3,41 +3,63 @@
 'use strict';
 
 var _ = require('lodash');
-var di = require('di');
+var _di = require('di');
+
+var self = module.exports = {
+    injector: null,
+    contextFactory: contextFactory
+};
+
+function contextFactory(di, directory) {
+    di = di || _di;
+
+    var helper = require('./lib/di')(di, __dirname);
+
+    return {
+        helper: helper,
+
+        initialize: function () {
+            var injector = new di.Injector(_.flattenDeep([
+                this.injectables
+            ]));
+
+            this.app = injector.get('app'),
+                this.logger = injector.get('Logger').initialize('Http.Server');
+            self.injector = injector;
+
+            return this;
+        },
+
+        injectables: _.flattenDeep(
+            [
+                // NPM packages
+                helper.simpleWrapper(_, '_'),
+                helper.requireWrapper('nconf'),
+                helper.requireWrapper('assert-plus', 'assert'),
+                helper.requireWrapper('fs', 'fs'),
+                helper.requireWrapper('path', 'path'),
+                helper.requireWrapper('child_process', 'child_process'),
+                helper.requireWrapper('bluebird', 'Promise'),
+                helper.requireWrapper('express', 'express'),
+                helper.requireWrapper('serve-index', 'serve-index'),
+                helper.requireWrapper('node-uuid', 'uuid'),
+                helper.requireWrapper('validator', 'validator'),
+                helper.requireWrapper('mkdirp', 'mkdirp'),
+                require('./app'),
+
+                // Glob Requirables
+                helper.requireGlob(__dirname + '/lib/*.js')
+            ]
+        ),
+    };
+}
 
 if (require.main === module) { run(); }
 
 function run() {
-    // setup dependency injection
-    var helper = require('./lib/di')(di, __dirname);
-    var injectables = _.flattenDeep(
-        [
-            // NPM packages
-            helper.simpleWrapper(_, '_'),
-            helper.requireWrapper('nconf'),
-            helper.requireWrapper('assert-plus', 'assert'),
-            helper.requireWrapper('fs', 'fs'),
-            helper.requireWrapper('path', 'path'),
-            helper.requireWrapper('child_process', 'child_process'),
-            helper.requireWrapper('bluebird', 'Promise'),
-            helper.requireWrapper('express', 'express'),
-            helper.requireWrapper('serve-index', 'serve-index'),
-            helper.requireWrapper('node-uuid', 'uuid'),
-            helper.requireWrapper('validator', 'validator'),
-            helper.requireWrapper('mkdirp', 'mkdirp'),
-            require('./app'),
-
-            // Glob Requirables
-            helper.requireGlob(__dirname + '/lib/*.js')
-        ]
-    );
-
-    var injector = new di.Injector(injectables);
-
-    // setup app runner
-    var app = injector.get('app');
-    var Logger = injector.get('Logger');
-    var logger = Logger.initialize("main");
+    var context = contextFactory().initialize(),
+        app = context.app,
+        logger = context.logger;
 
     app.start()
         .then(function () {
