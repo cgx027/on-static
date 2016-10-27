@@ -8,33 +8,17 @@ var util = require('util');
 
 var index = require('../index');
 
-global.context = index.contextFactory();
+global.onStaticContext = index.contextFactory();
 
-// Legacy
-global.dihelper = context.helper;
+global.dihelper = onStaticContext.helper;
 
-helper.startServer = function (overrides, endpointOpt) {
-    overrides = (overrides || []);
-
-    helper.setupInjector(_.flattenDeep([
-        context.injectables,
-        overrides
+helper.setupInjector(_.flattenDeep([
+        onStaticContext.injectables
     ]));
 
+helper.startServer = function (endpointOpt) {
     helper.injector.get('Services.Configuration')
-        .set('httpEndpoints', [_.merge({},
-            {
-                "address": "0.0.0.0",
-                "port": 7070,
-                "routers": "northbound"
-            },
-            {
-                "address": "0.0.0.0",
-                "port": 9090,
-                "routers": "southbound"
-            },
-            endpointOpt)
-        ]);
+        .set('httpEndpoints', [_.merge({},endpointOpt)]);
 
     index.injector = helper.injector;
 

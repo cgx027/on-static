@@ -64,7 +64,6 @@ var di = require('di');
 var dihelper = require('../lib/di')(di, __dirname);
 
 function provider(object) {
-    console.log('object', object)
     var provides = _.detect(object.annotations, function (annotation) {
         return _.has(annotation, 'token');
     });
@@ -151,6 +150,8 @@ global.helper = {
 
         // Initialize the injector with the new list of dependencies.
         this.injector = new di.Injector(dependencies);
+
+        console.log('endof setupInjector')
     },
 
     /**

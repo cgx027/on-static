@@ -24,7 +24,8 @@ function contextFactory(di, directory) {
             ]));
 
             this.app = injector.get('app'),
-                this.logger = injector.get('Logger').initialize('Http.Server');
+                this.logger = injector.get('Logger')
+                    .initialize('Http.Server');
             self.injector = injector;
 
             return this;
@@ -45,6 +46,8 @@ function contextFactory(di, directory) {
                 helper.requireWrapper('node-uuid', 'uuid'),
                 helper.requireWrapper('validator', 'validator'),
                 helper.requireWrapper('mkdirp', 'mkdirp'),
+                helper.requireWrapper('util', 'util'),
+
                 require('./app'),
 
                 // Glob Requirables
@@ -86,7 +89,3 @@ function run() {
     });
 }
 
-// app.use(express.compress());
-// app.use('/static', express.static('/home/onrack/test_ng/'));
-// app.use('/static', directory('/home/onrack/', {'icons': true}));
-// app.listen(process.env.PORT || 9998);

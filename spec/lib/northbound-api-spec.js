@@ -9,9 +9,17 @@ describe('northbound-api', function () {
     var stubNeedByIdentifier;
     var stubFind;
 
+    var endpoint = {
+        "address": "0.0.0.0",
+        "port": 7071,
+        "routers": "northbound"
+    };
+
+    var url = 'http://localhost:7070';
+
     before('start HTTP server', function () {
         this.timeout(5000);
-        return helper.startServer([]).then(function () {
+        return helper.startServer([], endpoint).then(function () {
             Promise = helper.injector.get('Promise');
             Errors = helper.injector.get('Errors');
         });
@@ -21,22 +29,39 @@ describe('northbound-api', function () {
         return helper.stopServer();
     });
 
-    beforeEach("reset stubs", function() {
+    beforeEach("reset stubs", function () {
     });
 
-    describe("GET /iso", function() {
+    describe("GET /iso", function () {
 
-        it("should a list of all iso", function() {
+        it("should a list of all iso", function () {
 
-            return helper.request().get('/iso')
-                .expect('Content-Type', /^application\/json/)
+            return helper.request(url).get('/iso')
+                .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect(function (res) {
-                    expect(res.body).to.be.an("Array").with.length(1);
-                    expect(res.body[0]).to.be.an("Object").with.property('id', "123");
+                    // expect(res.body).to.be.an("Array").with.length(1);
+                    // expect(res.body[0]).to.be.an("Object").with.property(
+                    //     'name', 
+                    //     'size',
+                    //     'uploaded'
+                    //     );
                 });
         });
 
-    });
+        it("should a list of all images", function () {
 
+            return helper.request(url).get('/images')
+                .set('Content-Type', 'application/json')
+                .expect(200)
+                .expect(function (res) {
+                    // expect(res.body).to.be.an("Array").with.length(1);
+                    // expect(res.body[0]).to.be.an("Object").with.property(
+                    //     'name', 
+                    //     'size',
+                    //     'uploaded'
+                    //     );
+                });
+        });
+    });
 });
