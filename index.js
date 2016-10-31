@@ -25,7 +25,7 @@ function contextFactory(di, directory) {
 
             this.app = injector.get('app'),
                 this.logger = injector.get('Logger')
-                    .initialize('Http.Server');
+                .initialize('Http.Server');
             self.injector = injector;
 
             return this;
@@ -47,6 +47,7 @@ function contextFactory(di, directory) {
                 helper.requireWrapper('validator', 'validator'),
                 helper.requireWrapper('mkdirp', 'mkdirp'),
                 helper.requireWrapper('util', 'util'),
+                helper.requireWrapper('lowdb', 'lowdb'),
 
                 require('./app'),
 

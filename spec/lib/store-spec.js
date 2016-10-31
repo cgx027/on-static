@@ -21,7 +21,7 @@ describe('store service', function () {
         ]
     };
 
-    var allImages = testData['images'];
+    var allImages = testData.images;
     var image = allImages[0];
 
     before('setup config', function () {
@@ -61,7 +61,7 @@ describe('store service', function () {
             store.load();
             expect(spyLoad).to.be.calledOnce
                 .and.returned(testData);
-            expect(store.contentCache).to.be.deep.equal(testData)
+            expect(store.contentCache).to.be.deep.equal(testData);
         });
 
         it("should return all store", function () {
@@ -82,7 +82,7 @@ describe('store service', function () {
             var query = {
                 name: 'centos',
                 version: '7.0' 
-            }
+            };
 
             store.findOneImage(query);
             expect(spyFindOneImage).to.be.calledOnce

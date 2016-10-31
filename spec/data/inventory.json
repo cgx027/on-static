@@ -1,11 +1,18 @@
 {
-    "images": [
-        {
-            "id": "b6b3e3be-c799-4af4-86c8-09a99d3aa7c7",
-            "iso": "centos-7.0.iso",
-            "name": "centos",
-            "version": "7.0",
-            "status": "OK"
-        }
-    ]
+  "images": [
+    {
+      "id": "b6b3e3be-c799-4af4-86c8-09a99d3aa7c7",
+      "iso": "centos-7.0.iso",
+      "name": "centos",
+      "version": "7.0",
+      "status": "OK"
+    },
+    {
+      "id": "c6b3e3be-c799-4af4-86c8-09a99d3aa7c7",
+      "iso": "centos-8.0.iso",
+      "name": "centos",
+      "version": "8.0",
+      "status": "OK"
+    }
+  ]
 }
