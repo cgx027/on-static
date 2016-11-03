@@ -15,6 +15,5 @@
   "httpFileServiceApiRoot": "/",
   "tempDir": "/tmp/on-static/",
   "isoDir": "./static/files/iso",
-  "inventoryFile": "./config.json",
-  "images": []
+  "inventoryFile": "./inventory.json"
 }
