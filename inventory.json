@@ -1,3 +1,11 @@
 {
-  "images": []
+  "images": [
+    {
+      "id": "b71793b5-d17a-4cb3-95ab-b84a054dc3f4",
+      "name": "ubuntu",
+      "version": "14.04",
+      "status": "OK",
+      "iso": "ubuntu-14.04.2-server-amd64.iso"
+    }
+  ]
 }
