@@ -40,12 +40,12 @@ The northbound API will by default listen at 0.0.0.0:7070, and the southbound wi
 
 ## Deploy
 
-It's recommend to doploy on-static on a standalone host to offload the host that runs RackHD. 
+It's recommend to doploy on-static on a standalone host to offload the host that runs RackHD.
 
 The host running on-static better to have two NICs, one for northbond API and one for southbond API. The NIC for southbound API should be accessible by RackHD nodes. 
-One example is to connect the northbond NIC to RachHD control network. 
+One example is to connect the northbond NIC to RachHD control network.
 
-![Deploy Example](on-static-deploy.bmp) 
+![Deploy Example](on-static-deploy.bmp)
 
 ## Use it with RackHD
 
@@ -65,6 +65,13 @@ First, it will has to setup a unbutu image server. The setups are:
     "fileServerPort": 9090,
     "fileServerPath": "/",
     ```
+
+RackHD configure files can be find at:
+
+    /opt/monorail/config.json
+or
+    /opt/onrack/etc/monorail.json
+
 4. Specify repo: "http://on-static-ip-addr:port/ubuntu/14.04" in the payload used in os install workflow. 
 
     The API look like:
@@ -210,7 +217,6 @@ First, it will has to setup a unbutu image server. The setups are:
                     "name": "centos",
                     "version": "7.0",
                     "isostore": "centos-7.0.iso"
-                },
                 "body": { },
                 "act": "Adding images for os named centos version 7.0",
                 "images": [
@@ -220,13 +226,14 @@ First, it will has to setup a unbutu image server. The setups are:
                         "name": "centos",
                         "version": "7.0",
                         "status": "preparing"
+                    },
                     }
                 ]
             }
             ```
 
-    3. DELETE http://0.0.0.0:7070/images: delete an OS images. two parameters are needed. 
-        * name: in query or body, the OS name. 
+    3. DELETE http://0.0.0.0:7070/images: delete an OS images. two parameters are needed.
+        * name: in query or body, the OS name.
         * version: in query of body, the OS version.
 
         ```
@@ -256,7 +263,7 @@ First, it will has to setup a unbutu image server. The setups are:
     1. Get/list install iso files.
 
         ```
-        curl -X GET "http://10.62.59.150:7070/iso" 
+        curl -X GET "http://10.62.59.150:7070/iso"
         {
             "iso": [
                 {
@@ -276,7 +283,7 @@ First, it will has to setup a unbutu image server. The setups are:
         ```
 
     2. Upload an iso file. One parameter is needed.
-        * name: in query or in body, the name of the iso that will be shown in the store. 
+        * name: in query or in body, the name of the iso that will be shown in the store.
 
         ```
         curl -X PUT "http://10.62.59.150:7070/iso?name=test.iso" --upload-file static/files/iso/centos-7.0.iso
@@ -294,7 +301,7 @@ First, it will has to setup a unbutu image server. The setups are:
         ```
 
     3. Delete a iso file that is in the store. One parameter is needed.
-        * name: in query or in body, the name of the iso will be deleted. 
+        * name: in query or in body, the name of the iso will be deleted.
 
         ```
         curl -X DELETE "http://10.62.59.150:7070/iso?name=test.iso"
@@ -338,7 +345,7 @@ There are not much to be configured for on-static. The Configuration is set on o
   "httpFileServiceRootDir": "./static/files",
   "httpFileServiceApiRoot": "/",
   "isoDir": "./static/files/iso",
-  "inventoryFile": "./config.json",
+  "inventoryFile": "./inventory.json",
   "images": []
 }
 ```
@@ -348,15 +355,15 @@ The Configurations explained as below:
 * httpEndpoints: the http endpoint settings. Each endpoint represent a http service, eight northbound or southbound. At lease one endpoint for northbound service and one endpoint for southbound service is a must have. More endpoints are also supported as per user configuration needs. Each endpoint has three parameters:
     * address: the IP address that the service is listen on. Specially, 0.0.0.0 means by listen on all network interfaceses, 127.0.0.1 means only listen to local loop interface. 
     * port: the IP address that the service is listen on.
-    * routers: should be one of northbound and southbound. 
+    * routers: should be one of northbound and southbound.
 
     Care should be taken when configuring the endpoints to makesure the IP address and port is not conflicting with other web services on the same server. 
 
 * httpFileServiceRootDir: the root dir that the sourcebound service will serve. It should be a relative path to the on-static root directory. Furture work can be added to support absolute path. 
-* httpFileServiceApiRoot: the API root for southbound service. 
+* httpFileServiceApiRoot: the API root for southbound service.
 * isoDir: the dir where user uploaded iso files will be stored. Also a relative path.
 * inventoryFile: the file where user image settings are stored. This should ONLY be set to ./config.json' by now but can be refactored to be other files. 
-* images: the user image settings. Updated as per user calls southbound APIs. 
+* images: the user image settings. Updated as per user calls southbound APIs.
 
 
 ## Contributions are welcome
