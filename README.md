@@ -362,7 +362,7 @@ The Configurations explained as below:
 * httpFileServiceRootDir: the root dir that the sourcebound service will serve. It should be a relative path to the on-static root directory. Furture work can be added to support absolute path. 
 * httpFileServiceApiRoot: the API root for southbound service.
 * isoDir: the dir where user uploaded iso files will be stored. Also a relative path.
-* inventoryFile: the file where user image settings are stored. This should ONLY be set to ./config.json' by now but can be refactored to be other files. 
+* inventoryFile: the file where user image settings are stored.
 * images: the user image settings. Updated as per user calls southbound APIs.
 
 
