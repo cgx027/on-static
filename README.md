@@ -38,6 +38,15 @@ Install on-static is quite straight forward.
 
 The northbound API will by default listen at 0.0.0.0:7070, and the southbound will by default listen at 0.0.0.0:9090. Those IP addresses and ports are user configurable.
 
+## Deploy
+
+It's recommend to doploy on-static on a standalone host to offload the host that runs RackHD. 
+
+The host running on-static better to have two NICs, one for northbond API and one for southbond API. The NIC for southbound API should be accessible by RackHD nodes. 
+One example is to connect the northbond NIC to RachHD control network. 
+
+![Deploy Example](on-static-deploy.bmp) 
+
 ## Use it with RackHD
 
 Assuming user already have a RackHD instance running and he/she wantted to install ubuntu to one of his/her nodes. 
@@ -49,17 +58,20 @@ First, it will has to setup a unbutu image server. The setups are:
 
         curl -X PUT "http://10.62.59.150:7070/images?name=ubuntu&version=14.04&isoweb=http://10.62.59.150:9090/iso/photon-1.0.iso"
 
-    where on-static will help download the iso from the link specified. If user had download the iso by himself/herself, he/she can use following API to upload the image to on-static:
-        
-        curl -X PUT "http://10.62.59.150:7070/images?name=ubuntu&version=14.04&isoclient=client.iso" --upload-file path-to-file/test.iso
+3. Make sure your RackHD config file has the following configurations so that it will go to an external static file server for os images.
 
-3. Specify repo: "http://on-static-ip-addr:port/ubuntu/14.04" in the payload used in os install workflow. 
+    ```
+    "fileServerAddress": "172.31.128.4", # this is the northbond IP of on-static, make sure it's accessible by managed nodes. 
+    "fileServerPort": 9090,
+    "fileServerPath": "/",
+    ```
+4. Specify repo: "http://on-static-ip-addr:port/ubuntu/14.04" in the payload used in os install workflow. 
 
     The API look like:
 
         http://{{host}}/api/2.0/nodes/:identifier/workflows?name=Graph.InstallUbuntu
 
-    And the pay load look like:
+    And the payload look like:
 
     ```
     {
@@ -102,7 +114,7 @@ First, it will has to setup a unbutu image server. The setups are:
         }
         ```
 
-    2. PUT http://0.0.0.0:7070/images: Add OS images. Three parameters are needed. 
+    2. PUT http://0.0.0.0:7070/images: Add OS images. Three parameters are needed.
         * name: in query or body, the OS name. Should be one of [ubuntu, rhel, photon, centos]. The list will expand as we move on. 
         * version: in query of body, the OS version. User can use any string that they like. Examples will include, 14.04, 14.04-x64, 14.04-EMC-Ted-test.
         * isoweb, isostore, isolocal or isoclient: the source of the iso file used to build the OS image. At least one of those four should be specified. If more then one is specified, on-static will use isostore over isolocal over isoweb over isoclient. 
@@ -110,7 +122,7 @@ First, it will has to setup a unbutu image server. The setups are:
             * isolocal: use iso file from the server which on-static in running.
             * isoclient: use iso file uploaded from user client where the APIs are called. Iso files are uploaded using HTTP PUT method.
             * isostore: use in-store iso file that had been uploaded before from above three sources. This is useful when you are adding a OS image that had been removed earlier.
-        
+
             Using **isoclient**
 
             ```
@@ -163,7 +175,7 @@ First, it will has to setup a unbutu image server. The setups are:
             }
             ```
 
-            Using **isolocal**. 
+            Using **isolocal**.
 
             ```
             curl -X PUT "http://10.62.59.150:7070/images?name=centos&version=7.0&isolocal=/home/onrack/github/on-static/static/files/iso/centos-7.0.iso"
