@@ -1,14 +1,14 @@
 # on-static
 
 __`on-static` is a tool that help [RackHD](https://github.com/rackhd) users to
-manage static file resources like os images.__
+manage static file resources like os images and microkernel images.
 
 RackHD has an built-in static file server that is used by OS install workflow. An small [setup script](https://github.com/RackHD/on-tools/blob/master/scripts/setup_iso.py) will help users to mount the os images. It's running great as long as the amount of managed nodes is not too many so that the static file server will not consume to much hardware resouces (CPU, memory, etc). 
 
 As long as users trying to scale up the managed nodes, they would think to move the static server out to a seperate hardware. RackHD allows user to use a standalone file server and on-static is meant to simplify the step to setup a standalone static file server, and provide a very easy way of managing os images and iso files. 
 
 Furture support may include management of other static resources
-like skupack, microkernel or overlayfs. __This is not implemented so far.__
+like microkernel and overlayfs. Furture plan also includes management of skupack files but __this is not implemented so far.__
 
 ## Introduction
 
@@ -17,6 +17,7 @@ With `on-static`, users can
 * **Create http server** that servers operation system images used for [RackHD](https://github.com/rackhd) OS installation. OS images are mounted from iso files that can be loaded from different sources.
 * **Mount uploaded iso file** and expose it from http server.
 * **Manage iso** files. Users can list in-store iso files, upload a new iso file, delete a in-store iso file.
+* **Manage microkernel files. Users can get/upload/delete microkernel files used in RackHD node discovery, including vmlinuz, initrd, basefs and overlay fs image files.
 * **Restore** settings after service restart. On-static service store user image settings on file-based persistant storage. Evertime on-static service get started, it will load the user image settings from the storage and get everything setup. 
 
 Two http servers will be created by default:
@@ -66,14 +67,14 @@ First, it will has to setup a unbutu image server. The setups are:
     "fileServerPath": "/",
     ```
 
-RackHD configure files can be find at:
+    RackHD configure files can be find at:
 
-    /opt/monorail/config.json
-or
+        /opt/monorail/config.json
+    or
 
-    /opt/onrack/etc/monorail.json
+        /opt/onrack/etc/monorail.json
 
-4. Specify repo: "http://on-static-ip-addr:port/ubuntu/14.04" in the payload used in os install workflow. 
+4. Issue OS install workflow with repo key in payload set to "http://on-static-ip-addr:port/ubuntu/14.04". 
 
     The API look like:
 
@@ -188,7 +189,7 @@ or
         }
         ```
 
-* Ios file management
+* Iso file management
 
     1. Get/list install iso files.
 
@@ -238,6 +239,67 @@ or
         }
         ```
 
+* Microkernel file management
+The Microkernel file management API works similar like iso file management API.
+
+    1. Get/list install microkernel files.
+
+        ```
+        curl -X GET "http://10.62.59.150:7070/microkernel"
+        [
+          {
+            "name": "base.trusty.3.16.0-25-generic.squashfs.img",
+            "size": "61.11 MB",
+            "uploaded": "2016-11-10T16:44:10.311Z"
+          },
+          {
+            "name": "discovery.overlay.cpio.gz",
+            "size": "8.59 MB",
+            "uploaded": "2016-11-10T16:44:10.351Z"
+          },
+          {
+            "name": "initrd.img-3.16.0-25-generic",
+            "size": "23.24 MB",
+            "uploaded": "2016-11-10T16:44:10.607Z"
+          },
+          {
+            "name": "vmlinuz-3.16.0-25-generic",
+            "size": "6.34 MB",
+            "uploaded": "2016-11-10T16:44:11.939Z"
+          }
+        ]
+        ```
+
+    2. Upload an microkernel file. One parameter is needed.
+        * name: in query or in body, the name of the microkernel that will be shown in the store.
+
+        ```
+        curl -X PUT "http://10.62.59.150:7070/microkernel?name=vmlinuz-3.16.0-25-generic" --upload-file vmlinuz-3.16.0-25-generic
+        Uploaded 10 %
+        Uploaded 20 %
+        Uploaded 30 %
+        Uploaded 40 %
+        Uploaded 50 %
+        Uploaded 60 %
+        Uploaded 70 %
+        Uploaded 80 %
+        Uploaded 90 %
+        Uploaded 100 %
+        Upload finished!
+        ```
+
+    3. Delete a microkernel file that is in the store. One parameter is needed.
+        * name: in query or in body, the name of the microkernel will be deleted.
+
+        ```
+        curl -X DELETE "http://10.62.59.150:7070/microkernel?name=vmlinuz-3.16.0-25-generic"
+        {
+            "name": "vmlinuz-3.16.0-25-generic",
+            "size": "6.34 MB",
+            "uploaded": "2016-11-10T16:44:11.939Z"
+        }
+        ```
+
 ### Southbound
 
 The southbound is all about static file server. It's by default listen at 0.0.0.0:9090. It also expose a GUI so that if you navigate to http://0.0.0.0:9090/ using your favorate web browser, you will get files and directories listed. 
@@ -260,11 +322,13 @@ There are not much to be configured for on-static. The Configuration is set on o
       "routers": "southbound"
     }
   ],
-  "httpFileServiceRootDir": "./static/files",
+  "httpFileServiceRootDir": "./static",
   "httpFileServiceApiRoot": "/",
-  "isoDir": "./static/files/iso",
+  "isoDir": "./static/iso",
+  "microkernelDir": "./static/common",
   "inventoryFile": "./inventory.json"
 }
+
 ```
 
 The Configurations explained as below:
@@ -279,10 +343,11 @@ The Configurations explained as below:
 * httpFileServiceRootDir: the root dir that the sourcebound service will serve. It should be a relative path to the on-static root directory. Furture work can be added to support absolute path. 
 * httpFileServiceApiRoot: the API root for southbound service.
 * isoDir: the dir where user uploaded iso files will be stored. Also a relative path.
+* microkernelDir: the dir where user uploaded microkernel files will be stored. Also a relative path.
 * inventoryFile: the file where user image settings are stored.
 
 
 ## Contributions are welcome
 
-
 _Copyright 2015-2016, EMC, Inc._
+
