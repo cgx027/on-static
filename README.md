@@ -70,6 +70,7 @@ RackHD configure files can be find at:
 
     /opt/monorail/config.json
 or
+
     /opt/onrack/etc/monorail.json
 
 4. Specify repo: "http://on-static-ip-addr:port/ubuntu/14.04" in the payload used in os install workflow. 
