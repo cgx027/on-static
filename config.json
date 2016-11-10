@@ -11,9 +11,10 @@
       "routers": "southbound"
     }
   ],
-  "httpFileServiceRootDir": "./static/files",
+  "httpFileServiceRootDir": "./static",
   "httpFileServiceApiRoot": "/",
-  "tempDir": "/tmp/on-static/",
-  "isoDir": "./static/files/iso",
+  "isoDir": "./static/iso",
+  "microkernelDir": "./static/common",
   "inventoryFile": "./inventory.json"
 }
+
