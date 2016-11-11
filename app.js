@@ -61,7 +61,7 @@ function Runner(
     function stop() {
         return Promise.map(services, function (service) {
             return service.stop();
-        })
+        });
     }
 
     return {
