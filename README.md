@@ -345,6 +345,7 @@ The Configurations explained as below:
 * isoDir: the dir where user uploaded iso files will be stored. Also a relative path.
 * microkernelDir: the dir where user uploaded microkernel files will be stored. Also a relative path.
 * inventoryFile: the file where user image settings are stored.
+* httpTimeout: The timeout in microsecond for every http request. Default to 24 hours. Take this into account if your are trying to upload a large file to on-static.
 
 
 ## Contributions are welcome
