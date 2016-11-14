@@ -39,6 +39,19 @@ Install on-static is quite straight forward.
 
 The northbound API will by default listen at 0.0.0.0:7070, and the southbound will by default listen at 0.0.0.0:9090. Those IP addresses and ports are user configurable.
 
+You can also run it as a Linux service. Install it as service:
+
+    sudo ./install
+
+And then run the service:
+
+    sudo service on-static start
+
+The log files are located at:
+
+    /var/log/on-static/on-static.log
+
+
 ## Deploy
 
 It's recommend to doploy on-static on a standalone host to offload the host that runs RackHD.
