@@ -39,7 +39,7 @@ Install on-static is quite straight forward.
 
 The northbound API will by default listen at 0.0.0.0:7070, and the southbound will by default listen at 0.0.0.0:9090. Those IP addresses and ports are user configurable.
 
-You can also run it as a Linux service. Install it as service:
+You can also run it as a Linux service. Install the service:
 
     sudo ./install
 
