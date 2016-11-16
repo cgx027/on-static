@@ -1,20 +1,21 @@
 {
-  "httpEndpoints": [
-    {
-      "address": "0.0.0.0",
-      "port": 7070,
-      "routers": "northbound"
-    },
-    {
-      "address": "0.0.0.0",
-      "port": 9090,
-      "routers": "southbound"
-    }
-  ],
-  "httpFileServiceRootDir": "./static",
-  "httpFileServiceApiRoot": "/",
-  "isoDir": "./static/iso",
-  "microkernelDir": "./static/common",
-  "inventoryFile": "./inventory.json"
+    "httpEndpoints": [
+        {
+            "address": "0.0.0.0",
+            "port": 7070,
+            "routers": "northbound"
+        },
+        {
+            "address": "0.0.0.0",
+            "port": 9090,
+            "routers": "southbound"
+        }
+    ],
+    "httpFileServiceRootDir": "./static",
+    "httpFileServiceApiRoot": "/",
+    "isoDir": "./static/iso",
+    "microkernelDir": "./static/common",
+    "inventoryFile": "./inventory.json",
+    "httpTimeout": 86400000
 }
 

@@ -39,6 +39,19 @@ Install on-static is quite straight forward.
 
 The northbound API will by default listen at 0.0.0.0:7070, and the southbound will by default listen at 0.0.0.0:9090. Those IP addresses and ports are user configurable.
 
+You can also run it as a Linux service. Install the service:
+
+    sudo ./install
+
+And then run the service:
+
+    sudo service on-static start
+
+The log files are located at:
+
+    /var/log/on-static/on-static.log
+
+
 ## Deploy
 
 It's recommend to doploy on-static on a standalone host to offload the host that runs RackHD.
@@ -345,6 +358,7 @@ The Configurations explained as below:
 * isoDir: the dir where user uploaded iso files will be stored. Also a relative path.
 * microkernelDir: the dir where user uploaded microkernel files will be stored. Also a relative path.
 * inventoryFile: the file where user image settings are stored.
+* httpTimeout: The timeout in microsecond for every http request. Default to 24 hours. Take this into account if your are trying to upload a large file to on-static.
 
 
 ## Contributions are welcome

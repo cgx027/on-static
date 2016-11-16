@@ -13,7 +13,7 @@ LOG_FILE="$LOG_DIR/$NAME.log"
 
 sudo rm -rf $APP_DIR
 
-sudo rm -f $SCRIPT_DIR/$SCRIPT_NAME
+sudo rm -rf $SCRIPT_DIR/$SCRIPT_NAME
 
 sudo rm -f $LOG_DIR/$LOG_FILE
 
