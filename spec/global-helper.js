@@ -150,8 +150,6 @@ global.helper = {
 
         // Initialize the injector with the new list of dependencies.
         this.injector = new di.Injector(dependencies);
-
-        console.log('endof setupInjector')
     },
 
     /**

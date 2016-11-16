@@ -16,9 +16,9 @@ helper.setupInjector(_.flattenDeep([
         onStaticContext.injectables
     ]));
 
-helper.startServer = function (endpointOpt) {
+helper.startServer = function (endpoints) {
     helper.injector.get('Services.Configuration')
-        .set('httpEndpoints', [_.merge({},endpointOpt)]);
+        .set('httpEndpoints', endpoints);
 
     index.injector = helper.injector;
 
