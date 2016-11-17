@@ -339,7 +339,8 @@ There are not much to be configured for on-static. The Configuration is set on o
   "httpFileServiceApiRoot": "/",
   "isoDir": "./static/iso",
   "microkernelDir": "./static/common",
-  "inventoryFile": "./inventory.json"
+  "inventoryFile": "./inventory.json",
+  "httpTimeout": "86400000"
 }
 
 ```
