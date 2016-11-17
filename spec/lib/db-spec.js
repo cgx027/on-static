@@ -31,22 +31,22 @@ describe('database service', function () {
     var image = allImages[0];
 
     before('setup config', function () {
-        setConfig();
+        setupConfig();
         database = helper.injector.get('Services.Database');
         lowdb = helper.injector.get('lowdb');
     });
 
     after('restore config', function () {
         sandbox.restore();
-        redatabaseConfig();
+        restoreConfig();
     });
 
-    function setConfig() {
+    function setupConfig() {
         return helper.injector.get('Services.Configuration')
             .set('inventoryFile', './spec/data/inventory.json');
     }
 
-    function redatabaseConfig() {
+    function restoreConfig() {
         return helper.injector.get('Services.Configuration')
             .set('inventoryFile', './inventory.json');
     }
