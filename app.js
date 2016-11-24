@@ -12,6 +12,7 @@ di.annotate(Runner, new di.Inject(
     'Http.Server',
     'Services.Configuration',
     'Logger',
+    'fs-operation',
     'Promise',
     'Services.Inventory'
 )
@@ -20,6 +21,7 @@ function Runner(
     HttpService,
     configuration,
     Logger,
+    fsOp,
     Promise,
     Inventory
 ) {
@@ -43,7 +45,9 @@ function Runner(
     function start() {
         return Promise.resolve()
             .then(function(){
-                // todo: add code to load configure at boot
+                return fsOp.unmountAllIso();
+            })
+            .then(function(){
                 return Inventory.loadConfigAtBoot();
             })
             .then(function () {
