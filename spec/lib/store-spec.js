@@ -4,7 +4,7 @@
 'use strict';
 
 describe('store service', function () {
-    var spyLoad, spyGetAll, spyGet, spyGetAllImages, spyFindOneImage,
+    var spyLoad, spyGetAll, spyGet, spyGetAllImages, spyFindOneImageByQuery,
         spySet, spyUpset;
     var sandbox = sinon.sandbox.create();
     var store;
@@ -31,7 +31,7 @@ describe('store service', function () {
         spyGet = sandbox.spy(store, 'get');
         spyGetAll = sandbox.spy(store, 'getAll');
         spyGetAllImages = sandbox.spy(store, 'getAllImages');
-        spyFindOneImage = sandbox.spy(store, 'findOneImage');
+        spyFindOneImageByQuery = sandbox.spy(store, 'findOneImageByQuery');
         spySet = sandbox.spy(store, 'set');
         // spyUpset = sandbox.spy(store, 'upset');
     });
@@ -84,8 +84,8 @@ describe('store service', function () {
                 version: '7.0' 
             };
 
-            store.findOneImage(query);
-            expect(spyFindOneImage).to.be.calledOnce
+            store.findOneImageByQuery(query);
+            expect(spyFindOneImageByQuery).to.be.calledOnce
                 .and.returned(image);
         });
 

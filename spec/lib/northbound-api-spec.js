@@ -10,6 +10,7 @@ describe('northbound-api', function () {
     var fs = helper.injector.get('fs');
     var path = helper.injector.get('path');
     var _ = helper.injector.get('_');
+    var fsOp = helper.injector.get('fs-operation');
     var inventory;
     var uploader;
     var configuration;
@@ -17,8 +18,9 @@ describe('northbound-api', function () {
     var sandbox;
     var stubGetAllIso, stubUpload, stubDeleteIso;
     var stubGetAllMicrokernel, stubDeleteMicrokernel;
-    var stubFindImageByQuery, stubGetOneImageByNameVersion,
+    var stubFindImagesByQuery, stubGetOneImageByNameVersion,
         stubDownloadIso, stubAddimage, stubDeleteImageByQuery;
+    var stubCreateSymbolLink;
 
     var cwd = process.cwd();
     var fakeStaticDir = "./spec/fake-static";
@@ -45,7 +47,7 @@ describe('northbound-api', function () {
     ];
 
     var testIso = {
-        name: 'test.iso',
+        name: 'fake.iso',
         size: '360.45 KB',
         uploaded: '2016-11-17T13:59:59.425Z'
     };
@@ -76,11 +78,13 @@ describe('northbound-api', function () {
 
         stubUpload = sandbox.spy(uploader.prototype, 'upload');
 
-        stubFindImageByQuery = sandbox.spy(inventory, 'findImageByQuery');
+        stubFindImagesByQuery = sandbox.spy(inventory, 'findImagesByQuery');
         stubGetOneImageByNameVersion = sandbox.spy(inventory, 'getOneImageByNameVersion');
         stubDeleteImageByQuery = sandbox.spy(inventory, 'deleteImageByQuery');
         stubDownloadIso = sandbox.spy(inventory, 'downloadIso');
         stubAddimage = sandbox.spy(inventory, 'addImage');
+
+        stubCreateSymbolLink = sandbox.spy(fsOp, 'createSymbolLink');
     }
 
     function setupConfig() {
@@ -98,8 +102,8 @@ describe('northbound-api', function () {
             .set("inventoryFile", './inventory.json');
     }
 
-    function clearInventory() {
-        fs.writeFileSync(path.join(cwd, fakeInventoryFile), '');
+    function setupInventoryFile() {
+        fs.writeFileSync(path.join(cwd, fakeInventoryFile), '{"images": []}');
     }
 
     function clearDir(link){
@@ -132,7 +136,7 @@ describe('northbound-api', function () {
     }
 
     function prepareDir() {
-        clearInventory();
+        setupInventoryFile();
         clearIsoFiles();
         clearMKFiles();
     }
@@ -147,6 +151,26 @@ describe('northbound-api', function () {
         return _.contains(fileList, name);
     }
 
+    function verifyMountContent(osName, osVersion) {
+        var fakeMountDir = path.join(fakeStaticDir,
+            osName + '/' + osVersion + '/');
+
+        var mountDirContent = fs.readdirSync(fakeMountDir);
+        if(_.isEqual(mountDirContent, [ 'test_fil', 'test_fol' ])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function cleanupDir(osName, osVersion) {
+        var fakeMountDir = path.join(fakeStaticDir,
+            osName + '/' + osVersion + '/');
+
+        fsOp.unmountIso(fakeMountDir);
+        fsOp.removeDirAndEmptyParent(fakeMountDir);
+    }
+
     before('setup config', function () {
         setupConfig();
         prepareDir();
@@ -154,18 +178,15 @@ describe('northbound-api', function () {
     });
 
     beforeEach('setup mock', function () {
-        // setupConfig();
-        // prepareDir();
         setupMock();
     });
 
     after('restore config', function () {
         restoreConfig();
-        // sandbox.restore();
+        setupInventoryFile();
     });
 
     afterEach('restore mock', function () {
-        // restoreConfig();
         sandbox.restore();
     });
 
@@ -295,66 +316,91 @@ describe('northbound-api', function () {
                 .expect(200)
                 .expect(function (res) {
                     expect(res.body).to.be.an("Array").with.length(0);
-                    expect(stubFindImageByQuery).to.have.been.calledOnce;
+                    expect(stubFindImagesByQuery).to.have.been.calledOnce;
                 });
         });
 
         it("should put one Images file with using isolocal", function (done) {
 
+            this.timeout(5000);
+
             return helper.request(url).put('/images?name=' + testImage.name +
-            '&version=' + testImage.version + '&isolocal=' + fakeIsoFile)
+                '&version=' + testImage.version + '&isolocal=' + fakeIsoFile)
                 .expect(200)
                 .set('Content-Type', 'application/json')
                 .end(function (err, res) {
                     var image = res.body;
-                    console.log('----------', image, res.body);
-                    expect(image.name).should.equal(testImage.name);
-                    expect(image.version).should.equal(testImage.version);
-                    expect(image.status).should.equal(testImage.status);
-                    expect(image.iso).should.equal(testIso.name);
+                    expect(image.name).to.equal(testImage.name);
+                    expect(image.version).to.equal(testImage.version);
+                    expect(image.status).to.equal('OK');
+                    expect(image.iso).to.equal(testIso.name);
+
                     expect(stubGetOneImageByNameVersion).to.have.been.calledOnce;
-                    expect(stubDownloadIso).to.have.been.calledOnce;
+                    expect(stubCreateSymbolLink).to.have.been.calledOnce;
                     expect(stubAddimage).to.have.been.calledOnce;
+
+                    expect(verifyMountContent(testImage.name, testImage.version)).to.equal(true);
+
                     done();
                 });
         });
 
-    //     it("should put one Images file with using isolocal", function (done) {
-    //
-    //         return helper.request(url).put('/images?name=' + testImage.name +
-    //         '&version=' + testImage.version + 'isolocal=' + fakeIsoFile)
-    //             .send(fs.readFileSync(fakeIsoFile, 'ascii'))
-    //             .expect(200)
-    //             .end(function (err, res) {
-    //                 res.text.should.contain('Upload');
-    //                 expect(stubUpload).to.have.been.calledOnce;
-    //                 done();
-    //             });
-    //     });
-    //
-    //     it("should return one Images files", function () {
-    //         return helper.request(url).get('/images')
-    //             .set('Content-Type', 'application/json')
-    //             .expect(200)
-    //             .expect(function (res) {
-    //                 expect(res.body).to.be.an("Array").with.length(1);
-    //                 expect(stubGetAllImages).to.have.been.calledOnce;
-    //                 res.body[0].name.should.equal(testImage.name);
-    //                 res.body[0].size.should.equal(testImage.size);
-    //             });
-    //     });
-    //
-    //     it("should delete one images", function () {
-    //         return helper.request(url).delete('/Images?name=' + testIso.name)
-    //             .set('Content-Type', 'application/json')
-    //             .expect(200)
-    //             .expect(function (res) {
-    //                 expect(res.body).to.be.an("object");
-    //                 expect(stubDeleteImages).to.have.been.calledOnce;
-    //                 res.body.name.should.equal(testImage.name);
-    //                 res.body.size.should.equal(testImage.size);
-    //             });
-    //     });
+        it("should return one Images files", function () {
+            return helper.request(url).get('/images')
+                .set('Content-Type', 'application/json')
+                .expect(200)
+                .expect(function (res) {
+                    expect(res.body).to.be.an("Array").with.length(1);
+                    expect(stubFindImagesByQuery).to.have.been.calledOnce;
+                    expect(res.body[0].name).to.equal(testImage.name);
+                    expect(res.body[0].version).to.equal(testImage.version);
+
+                });
+        });
+
+        it("should delete one images", function () {
+            return helper.request(url).delete('/images?name=' + testImage.name)
+                .set('Content-Type', 'application/json')
+                .expect(200)
+                .expect(function (res) {
+                    expect(res.body).to.be.an("Array");
+                    expect(stubDeleteImageByQuery).to.have.been.calledOnce;
+                    expect(res.body[0].name).to.equal(testImage.name);
+                    expect(res.body[0].version).to.equal(testImage.version);
+
+                    cleanupDir(testImage.name, testImage.version);
+                });
+        });
+
+        it("should put one Images file with using isoweb", function (done) {
+
+            this.timeout(5000);
+
+            // setTimeout(function(){
+            //     console.log('Exit timeout');
+            // }, 500000);
+
+            return helper.request(url).put('/images?name=' + testImage.name +
+                '&version=' + testImage.version + '&isolocal=' + fakeIsoFile)
+                .expect(200)
+                .set('Content-Type', 'application/json')
+                .end(function (err, res) {
+                    var image = res.body;
+                    expect(image.name).to.equal(testImage.name);
+                    expect(image.version).to.equal(testImage.version);
+                    expect(image.status).to.equal('OK');
+                    expect(image.iso).to.equal(testIso.name);
+
+                    expect(stubGetOneImageByNameVersion).to.have.been.calledOnce;
+                    expect(stubCreateSymbolLink).to.have.been.calledOnce;
+                    expect(stubAddimage).to.have.been.calledOnce;
+
+                    expect(verifyMountContent(testImage.name, testImage.version)).to.equal(true);
+
+                    done();
+                });
+
+        });
     });
 
 });
