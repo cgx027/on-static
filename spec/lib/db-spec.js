@@ -43,7 +43,7 @@ describe('database service', function () {
 
     function setupConfig() {
         return helper.injector.get('Services.Configuration')
-            .set('inventoryFile', './spec/data/inventory.json');
+            .set('inventoryFile', './spec/data/inventory_db_test.json');
     }
 
     function restoreConfig() {
@@ -69,9 +69,9 @@ describe('database service', function () {
                 version: '7.0'
             };
 
-            return database.findOneImage(query)
+            return database.findOneImageByQuery(query)
                 .then(function(){
-                    return database.findOneImage(query)
+                    return database.findOneImageByQuery(query)
                         .should.eventually.deep.equal(image);
                 });
         });
@@ -82,7 +82,7 @@ describe('database service', function () {
 
             return database.findOneImageByNameVersion(name, version)
                 .then(function(){
-                    return database.findOneImage({name: name, version: version})
+                    return database.findOneImageByQuery({name: name, version: version})
                         .should.eventually.deep.equal(image);
                 });
         });
@@ -104,7 +104,7 @@ describe('database service', function () {
 
             database.updateImage(query, data)
                 .then(function(){
-                    return database.findOneImage(query)
+                    return database.findOneImageByQuery(query)
                         .should.eventually.deep.equal(updatedImage);
                 })
                 .then(function(){
@@ -146,7 +146,7 @@ describe('database service', function () {
 
             return database.deleteImage(query)
                 .then(function(){
-                    return database.findOneImage(query)
+                    return database.findOneImageByQuery(query)
                         .should.eventually.deep.equal();
                 })
                 .then(function(){
