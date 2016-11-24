@@ -63,7 +63,8 @@ describe('northbound-api', function () {
         version: 'trusty'
     };
 
-    var url = 'http://localhost:7071';
+    var url_north = 'http://localhost:7071';
+    var url_south = 'http://localhost:7071';
 
     function setupMock(){
         sandbox = sinon.sandbox.create();
@@ -113,6 +114,11 @@ describe('northbound-api', function () {
                 path.join(link, file)
             );
         });
+    }
+
+    function copyTestIsoToStore() {
+        return fs.createReadStream(fakeIsoFile)
+            .pipe(fs.createWriteStream(path.join(fakeIsoDir, '/test.iso'))) ;
     }
 
     function getMicrokernelFiles(){
@@ -207,7 +213,7 @@ describe('northbound-api', function () {
 
         it("should return empty iso files", function () {
 
-            return helper.request(url).get('/iso')
+            return helper.request(url_north).get('/iso')
                 .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect(function (res) {
@@ -218,7 +224,7 @@ describe('northbound-api', function () {
 
         it("should put one iso file with query in url", function (done) {
 
-            return helper.request(url).put('/iso?name=' + testIso.name)
+            return helper.request(url_north).put('/iso?name=' + testIso.name)
                 .send(fs.readFileSync(fakeIsoFile, 'ascii'))
                 .expect(200)
                 .end(function (err, res) {
@@ -229,7 +235,7 @@ describe('northbound-api', function () {
         });
 
         it("should return one iso files", function () {
-            return helper.request(url).get('/iso')
+            return helper.request(url_north).get('/iso')
                 .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect(function (res) {
@@ -242,7 +248,7 @@ describe('northbound-api', function () {
         });
 
         it("should delete one iso", function () {
-            return helper.request(url).delete('/iso?name=' + testIso.name)
+            return helper.request(url_north).delete('/iso?name=' + testIso.name)
                 .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect(function (res) {
@@ -259,7 +265,7 @@ describe('northbound-api', function () {
 
         it("should return empty microkernel files", function () {
 
-            return helper.request(url).get('/microkernel')
+            return helper.request(url_north).get('/microkernel')
                 .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect(function (res) {
@@ -270,7 +276,7 @@ describe('northbound-api', function () {
 
         it("should put one microkernel file with query in url", function (done) {
 
-            return helper.request(url).put('/microkernel?name=' + testMicrokernel.name)
+            return helper.request(url_north).put('/microkernel?name=' + testMicrokernel.name)
                 .send(fs.readFileSync(fakeMicrokernelFile, 'ascii'))
                 .expect(200)
                 .end(function (err, res) {
@@ -281,7 +287,7 @@ describe('northbound-api', function () {
         });
 
         it("should return one microkernel files", function () {
-            return helper.request(url).get('/microkernel')
+            return helper.request(url_north).get('/microkernel')
                 .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect(function (res) {
@@ -294,7 +300,7 @@ describe('northbound-api', function () {
         });
 
         it("should delete one microkernel", function () {
-            return helper.request(url).delete('/microkernel?name=' + testMicrokernel.name)
+            return helper.request(url_north).delete('/microkernel?name=' + testMicrokernel.name)
                 .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect(function (res) {
@@ -311,7 +317,7 @@ describe('northbound-api', function () {
 
         it("should return empty Images files", function () {
 
-            return helper.request(url).get('/images')
+            return helper.request(url_north).get('/images')
                 .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect(function (res) {
@@ -324,7 +330,7 @@ describe('northbound-api', function () {
 
             this.timeout(5000);
 
-            return helper.request(url).put('/images?name=' + testImage.name +
+            return helper.request(url_north).put('/images?name=' + testImage.name +
                 '&version=' + testImage.version + '&isolocal=' + fakeIsoFile)
                 .expect(200)
                 .set('Content-Type', 'application/json')
@@ -346,7 +352,7 @@ describe('northbound-api', function () {
         });
 
         it("should return one Images files", function () {
-            return helper.request(url).get('/images')
+            return helper.request(url_north).get('/images')
                 .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect(function (res) {
@@ -359,7 +365,7 @@ describe('northbound-api', function () {
         });
 
         it("should delete one images", function () {
-            return helper.request(url).delete('/images?name=' + testImage.name)
+            return helper.request(url_north).delete('/images?name=' + testImage.name)
                 .set('Content-Type', 'application/json')
                 .expect(200)
                 .expect(function (res) {
@@ -380,7 +386,9 @@ describe('northbound-api', function () {
             //     console.log('Exit timeout');
             // }, 500000);
 
-            return helper.request(url).put('/images?name=' + testImage.name +
+            copyTestIsoToStore();
+
+            return helper.request(url_north).put('/images?name=' + testImage.name +
                 '&version=' + testImage.version + '&isolocal=' + fakeIsoFile)
                 .expect(200)
                 .set('Content-Type', 'application/json')
@@ -396,6 +404,8 @@ describe('northbound-api', function () {
                     expect(stubAddimage).to.have.been.calledOnce;
 
                     expect(verifyMountContent(testImage.name, testImage.version)).to.equal(true);
+
+                    clearIsoFiles();
 
                     done();
                 });
