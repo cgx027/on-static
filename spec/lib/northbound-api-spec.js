@@ -28,6 +28,7 @@ describe('northbound-api', function () {
     var fakeMKDir = "./spec/fake-static/common";
     var fakeInventoryFile = "./spec/data/inventory.json";
 
+    var fakeStaticDirAbs = path.join(cwd, "./spec/fake-static/iso");
     var fakeIsoDirAbs = path.join(cwd, "./spec/fake-static/iso");
     var fakeMKDirAbs = path.join(cwd, "./spec/fake-static/common");
     var fakeIsoFile = path.join(cwd, "./spec/data/fake.iso");
@@ -170,7 +171,7 @@ describe('northbound-api', function () {
     }
 
     function cleanupDir(osName, osVersion) {
-        var fakeMountDir = path.join(fakeStaticDir,
+        var fakeMountDir = path.join(fakeStaticDirAbs,
             osName + '/' + osVersion + '/');
 
         fsOp.unmountIso(fakeMountDir);
@@ -373,8 +374,6 @@ describe('northbound-api', function () {
                     expect(stubDeleteImageByQuery).to.have.been.calledOnce;
                     expect(res.body[0].name).to.equal(testImage.name);
                     expect(res.body[0].version).to.equal(testImage.version);
-
-                    cleanupDir(testImage.name, testImage.version);
                 });
         });
 
