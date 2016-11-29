@@ -361,6 +361,15 @@ The Configurations explained as below:
 * inventoryFile: the file where user image settings are stored.
 * httpTimeout: The timeout in microsecond for every http request. Default to 24 hours. Take this into account if your are trying to upload a large file to on-static.
 
+## Development notes
+
+### Run jshint and unit test coverage report
+
+```
+./HWIMO-TEST
+```
+
+Unit test coverage report can be found at ./coverage
 
 ## Contributions are welcome
 
