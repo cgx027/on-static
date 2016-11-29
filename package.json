@@ -40,7 +40,8 @@
     "xunit-file": "0.0.6",
     "jshint": "^2.5.11",
     "istanbul": "^0.3.5",
-    "nock": "~3.5.0",
-    "mocha": "^2.1.0"
+    "os-tmpdir": "~1.0.1",
+    "mocha": "^2.1.0",
+    "rimraf": "~2.5.0"
   }
 }
