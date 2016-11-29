@@ -54,7 +54,8 @@ function contextFactory(di, directory) {
                 require('./app'),
 
                 // Glob Requirables
-                helper.requireGlob(__dirname + '/lib/*.js')
+                helper.requireGlob(__dirname + '/lib/api/*.js'),
+                helper.requireGlob(__dirname + '/lib/common/*.js')
             ]
         ),
     };
