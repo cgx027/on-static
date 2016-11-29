@@ -96,7 +96,7 @@ describe("Errors", function() {
             this.subject.stack.split('\n')[1].should.contain(__filename);
         });
 
-        it('should provide a 400 status', function () {
+        it('should provide a status', function () {
             this.subject.status.should.equal(400);
         });
     });
@@ -128,6 +128,210 @@ describe("Errors", function() {
 
         it('should provide the correct stack trace', function () {
             this.subject.stack.split('\n')[1].should.contain(__filename);
+        });
+    });
+
+    describe('InternalServerError', function () {
+        before(function () {
+            this.subject = new Errors.InternalServerError('message');
+        });
+
+        it('should be an instance of Error', function () {
+            this.subject.should.be.an.instanceof(Error);
+        });
+
+        it('should be an instance of BaseError', function () {
+            this.subject.should.be.an.instanceof(Errors.BaseError);
+        });
+
+        it('should be an instance of InternalServerError', function () {
+            this.subject.should.be.an.instanceof(Errors.InternalServerError);
+        });
+
+        it('should have a name of InternalServerError', function () {
+            this.subject.name.should.be.equal('InternalServerError');
+        });
+
+        it('should have a message of message', function () {
+            this.subject.message.should.be.equal('message');
+        });
+
+        it('should provide the correct stack trace', function () {
+            this.subject.stack.split('\n')[1].should.contain(__filename);
+        });
+
+        it('should provide a status', function () {
+            this.subject.status.should.equal(500);
+        });
+    });
+
+    describe('UnauthorizedError', function () {
+        before(function () {
+            this.subject = new Errors.UnauthorizedError('message');
+        });
+
+        it('should be an instance of Error', function () {
+            this.subject.should.be.an.instanceof(Error);
+        });
+
+        it('should be an instance of BaseError', function () {
+            this.subject.should.be.an.instanceof(Errors.BaseError);
+        });
+
+        it('should be an instance of UnauthorizedError', function () {
+            this.subject.should.be.an.instanceof(Errors.UnauthorizedError);
+        });
+
+        it('should have a name of UnauthorizedError', function () {
+            this.subject.name.should.be.equal('UnauthorizedError');
+        });
+
+        it('should have a message of message', function () {
+            this.subject.message.should.be.equal('message');
+        });
+
+        it('should provide the correct stack trace', function () {
+            this.subject.stack.split('\n')[1].should.contain(__filename);
+        });
+
+        it('should provide a status', function () {
+            this.subject.status.should.equal(401);
+        });
+    });
+
+    describe('ForbiddenError', function () {
+        before(function () {
+            this.subject = new Errors.ForbiddenError('message');
+        });
+
+        it('should be an instance of Error', function () {
+            this.subject.should.be.an.instanceof(Error);
+        });
+
+        it('should be an instance of BaseError', function () {
+            this.subject.should.be.an.instanceof(Errors.BaseError);
+        });
+
+        it('should be an instance of ForbiddenError', function () {
+            this.subject.should.be.an.instanceof(Errors.ForbiddenError);
+        });
+
+        it('should have a name of ForbiddenError', function () {
+            this.subject.name.should.be.equal('ForbiddenError');
+        });
+
+        it('should have a message of message', function () {
+            this.subject.message.should.be.equal('message');
+        });
+
+        it('should provide the correct stack trace', function () {
+            this.subject.stack.split('\n')[1].should.contain(__filename);
+        });
+
+        it('should provide a status', function () {
+            this.subject.status.should.equal(403);
+        });
+    });
+
+    describe('NotFoundError', function () {
+        before(function () {
+            this.subject = new Errors.NotFoundError('message');
+        });
+
+        it('should be an instance of Error', function () {
+            this.subject.should.be.an.instanceof(Error);
+        });
+
+        it('should be an instance of BaseError', function () {
+            this.subject.should.be.an.instanceof(Errors.BaseError);
+        });
+
+        it('should be an instance of NotFoundError', function () {
+            this.subject.should.be.an.instanceof(Errors.NotFoundError);
+        });
+
+        it('should have a name of NotFoundError', function () {
+            this.subject.name.should.be.equal('NotFoundError');
+        });
+
+        it('should have a message of message', function () {
+            this.subject.message.should.be.equal('message');
+        });
+
+        it('should provide the correct stack trace', function () {
+            this.subject.stack.split('\n')[1].should.contain(__filename);
+        });
+
+        it('should provide a status', function () {
+            this.subject.status.should.equal(404);
+        });
+    });
+
+    describe('ConflictError', function () {
+        before(function () {
+            this.subject = new Errors.ConflictError('message');
+        });
+
+        it('should be an instance of Error', function () {
+            this.subject.should.be.an.instanceof(Error);
+        });
+
+        it('should be an instance of BaseError', function () {
+            this.subject.should.be.an.instanceof(Errors.BaseError);
+        });
+
+        it('should be an instance of ConflictError', function () {
+            this.subject.should.be.an.instanceof(Errors.ConflictError);
+        });
+
+        it('should have a name of ConflictError', function () {
+            this.subject.name.should.be.equal('ConflictError');
+        });
+
+        it('should have a message of message', function () {
+            this.subject.message.should.be.equal('message');
+        });
+
+        it('should provide the correct stack trace', function () {
+            this.subject.stack.split('\n')[1].should.contain(__filename);
+        });
+
+        it('should provide a status', function () {
+            this.subject.status.should.equal(409);
+        });
+    });
+
+    describe('RequestTimedOutError', function () {
+        before(function () {
+            this.subject = new Errors.RequestTimedOutError('message');
+        });
+
+        it('should be an instance of Error', function () {
+            this.subject.should.be.an.instanceof(Error);
+        });
+
+        it('should be an instance of BaseError', function () {
+            this.subject.should.be.an.instanceof(Errors.BaseError);
+        });
+
+        it('should be an instance of RequestTimedOutError', function () {
+            this.subject.should.be.an.instanceof(Errors.RequestTimedOutError);
+        });
+
+        it('should have a name of RequestTimedOutError', function () {
+            this.subject.name.should.be.equal('RequestTimedOutError');
+        });
+
+        it('should have a message of message', function () {
+            this.subject.message.should.be.equal('message');
+        });
+
+        it('should provide the correct stack trace', function () {
+            this.subject.stack.split('\n')[1].should.contain(__filename);
+        });
+
+        it('should provide a status', function () {
+            this.subject.status.should.equal(408);
         });
     });
 });
