@@ -337,7 +337,6 @@ describe('northbound-api', function () {
                 .expect(200)
                 .set('Content-Type', 'application/json')
                 .end(function (err, res) {
-                    console.log(res)
                     var image = res.body;
                     expect(image.name).to.equal(testImage.name);
                     expect(image.version).to.equal(testImage.version);
