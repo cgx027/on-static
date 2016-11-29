@@ -7,6 +7,12 @@
     "test": "./node_modules/.bin/mocha $(find spec -name '*-spec.js') -R spec --require spec/helper.js",
     "debug": "./node_modules/.bin/mocha debug $(find spec -name '*-spec.js') -R spec --require spec/helper.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cgx027/on-static.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
   "dependencies": {
     "assert-plus": "^1.0.0",
     "bluebird": "^3.4.6",
@@ -31,6 +37,9 @@
     "sinon-as-promised": "^2.0.3",
     "sinon-chai": "^2.7.0",
     "supertest": "^1.2.0",
+    "xunit-file": "0.0.6",
+    "jshint": "^2.5.11",
+    "istanbul": "^0.3.5",
     "mocha": "^2.1.0"
   }
 }

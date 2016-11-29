@@ -5,6 +5,8 @@
 var _ = require('lodash');
 var _di = require('di');
 
+require('./extensions.js');
+
 var self = module.exports = {
     injector: null,
     contextFactory: contextFactory
