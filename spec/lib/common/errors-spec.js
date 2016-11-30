@@ -3,10 +3,10 @@
 'use strict';
 
 describe("Errors", function() {
-    var Errors;
+    var Errors = helper.injector.get('Errors');
 
     before(function () {
-        Errors = helper.injector.get('Errors');
+        console.log(Errors)
     });
 
     helper.after();
@@ -133,6 +133,7 @@ describe("Errors", function() {
 
     describe('InternalServerError', function () {
         before(function () {
+            debugger;
             this.subject = new Errors.InternalServerError('message');
         });
 
