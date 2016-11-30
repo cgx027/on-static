@@ -11,8 +11,6 @@ describe('Http.Server', function () {
     var singleService;
     var defaultRouter = express.Router();
 
-    var nock = require('nock');
-
     before(function () {
 
         defaultRouter.use('/test', function (req, res) {
