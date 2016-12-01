@@ -360,6 +360,7 @@ The Configurations explained as below:
 * microkernelDir: the dir where user uploaded microkernel files will be stored. Also a relative path.
 * inventoryFile: the file where user image settings are stored.
 * httpTimeout: The timeout in microsecond for every http request. Default to 24 hours. Take this into account if your are trying to upload a large file to on-static.
+* minLogLevel: The minimal log serverity level, defaults to 0, with valid value range from 0 to 5. Less log will print to console if the number is larger. 0 will print logs of all serverity to screen and 4 will only print critical errors. 5 and larger will not print any log to screen.
 
 ## Development notes
 
