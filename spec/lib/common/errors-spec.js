@@ -5,10 +5,6 @@
 describe("Errors", function() {
     var Errors = helper.injector.get('Errors');
 
-    before(function () {
-        console.log(Errors)
-    });
-
     helper.after();
 
     describe('Error', function () {
@@ -133,7 +129,6 @@ describe("Errors", function() {
 
     describe('InternalServerError', function () {
         before(function () {
-            debugger;
             this.subject = new Errors.InternalServerError('message');
         });
 
