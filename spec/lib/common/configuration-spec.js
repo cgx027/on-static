@@ -9,7 +9,7 @@ describe(require('path').basename(__filename), function () {
     var path = helper.injector.get('path');
     var nconf = helper.injector.get('nconf');
     var subject = helper.injector.get('Services.Configuration');
-    var configFilePath = path.join(process.cwd(), 'spec/data/test_config.json');
+    var configFilePath = path.join(process.cwd(), 'config.json');
 
     helper.after();
 

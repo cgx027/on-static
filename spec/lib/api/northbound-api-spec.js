@@ -15,14 +15,9 @@ describe('northbound-api', function () {
     var uploader;
     var configuration;
 
-    var sandbox;
-    var stubGetAllIso, stubUpload, stubDeleteIso;
-    var stubGetAllMicrokernel, stubDeleteMicrokernel;
-    var stubFindImagesByQuery, stubGetOneImageByNameVersion,
-        stubDownloadIso, stubAddimage, stubDeleteImageByQuery;
-    var stubCreateSymbolLink;
-
     var cwd = process.cwd();
+
+    var sandbox = sinon.sandbox.create();
     var fakeStaticDir = "./spec/fake-static";
     var fakeIsoDir = "./spec/fake-static/iso";
     var fakeMKDir = "./spec/fake-static/common";
@@ -66,28 +61,6 @@ describe('northbound-api', function () {
 
     var urlNorth = 'http://localhost:7071';
     var urlSouth = 'http://localhost:7071';
-
-    function setupMock(){
-        sandbox = sinon.sandbox.create();
-        inventory = helper.injector.get('Services.Inventory');
-        uploader = helper.injector.get('FileUploader');
-
-        stubGetAllIso = sandbox.spy(inventory, 'getAllIso');
-        stubDeleteIso = sandbox.spy(inventory, 'deleteIso');
-
-        stubGetAllMicrokernel = sandbox.spy(inventory, 'getAllMicrokernel');
-        stubDeleteMicrokernel = sandbox.spy(inventory, 'deleteMicrokernel');
-
-        stubUpload = sandbox.spy(uploader.prototype, 'upload');
-
-        stubFindImagesByQuery = sandbox.spy(inventory, 'findImagesByQuery');
-        stubGetOneImageByNameVersion = sandbox.spy(inventory, 'getOneImageByNameVersion');
-        stubDeleteImageByQuery = sandbox.spy(inventory, 'deleteImageByQuery');
-        stubDownloadIso = sandbox.spy(inventory, 'downloadIso');
-        stubAddimage = sandbox.spy(inventory, 'addImage');
-
-        stubCreateSymbolLink = sandbox.spy(fsOp, 'createSymbolLink');
-    }
 
     function setupConfig() {
         configuration = helper.injector.get('Services.Configuration');
@@ -181,20 +154,11 @@ describe('northbound-api', function () {
     before('setup config', function () {
         setupConfig();
         prepareDir();
-        // setupMock();
-    });
-
-    beforeEach('setup mock', function () {
-        setupMock();
     });
 
     after('restore config', function () {
         restoreConfig();
         setupInventoryFile();
-    });
-
-    afterEach('restore mock', function () {
-        sandbox.restore();
     });
 
     before('start HTTP server', function () {
@@ -219,7 +183,6 @@ describe('northbound-api', function () {
                 .expect(200)
                 .expect(function (res) {
                     expect(res.body).to.be.an("Array").with.length(0);
-                    expect(stubGetAllIso).to.have.been.calledOnce;
                 });
         });
 
@@ -229,9 +192,6 @@ describe('northbound-api', function () {
                 .send(fs.readFileSync(fakeIsoFile, 'ascii'))
                 .expect(200)
                 .end(function (err, res) {
-                    // console.log(res);
-                    // res.text.should.contain('Upload');
-                    expect(stubUpload).to.have.been.calledOnce;
                     done();
                 });
         });
@@ -242,7 +202,6 @@ describe('northbound-api', function () {
                 .expect(200)
                 .expect(function (res) {
                     expect(res.body).to.be.an("Array").with.length(1);
-                    expect(stubGetAllIso).to.have.been.calledOnce;
                     res.body[0].name.should.equal(testIso.name);
                     res.body[0].size.should.equal(testIso.size);
                     expect(verifyIsoExistance(testIso.name)).to.equal(true);
@@ -255,7 +214,6 @@ describe('northbound-api', function () {
                 .expect(200)
                 .expect(function (res) {
                     expect(res.body).to.be.an("object");
-                    expect(stubDeleteIso).to.have.been.calledOnce;
                     res.body.name.should.equal(testIso.name);
                     res.body.size.should.equal(testIso.size);
                     expect(verifyIsoExistance(testIso.name)).to.equal(false);
@@ -272,7 +230,6 @@ describe('northbound-api', function () {
                 .expect(200)
                 .expect(function (res) {
                     expect(res.body).to.be.an("Array").with.length(0);
-                    expect(stubGetAllMicrokernel).to.have.been.calledOnce;
                 });
         });
 
@@ -282,8 +239,6 @@ describe('northbound-api', function () {
                 .send(fs.readFileSync(fakeMicrokernelFile, 'ascii'))
                 .expect(200)
                 .end(function (err, res) {
-                    // res.text.should.contain('Upload');
-                    expect(stubUpload).to.have.been.calledOnce;
                     done();
                 });
         });
@@ -294,7 +249,6 @@ describe('northbound-api', function () {
                 .expect(200)
                 .expect(function (res) {
                     expect(res.body).to.be.an("Array").with.length(1);
-                    expect(stubGetAllMicrokernel).to.have.been.calledOnce;
                     res.body[0].name.should.equal(testMicrokernel.name);
                     res.body[0].size.should.equal(testMicrokernel.size);
                     expect(verifyMicrokernelExistance(testMicrokernel.name)).to.equal(true);
@@ -307,7 +261,6 @@ describe('northbound-api', function () {
                 .expect(200)
                 .expect(function (res) {
                     expect(res.body).to.be.an("object");
-                    expect(stubDeleteMicrokernel).to.have.been.calledOnce;
                     res.body.name.should.equal(testMicrokernel.name);
                     res.body.size.should.equal(testMicrokernel.size);
                     expect(verifyMicrokernelExistance(testMicrokernel.name)).to.equal(false);
@@ -324,7 +277,6 @@ describe('northbound-api', function () {
                 .expect(200)
                 .expect(function (res) {
                     expect(res.body).to.be.an("Array").with.length(0);
-                    expect(stubFindImagesByQuery).to.have.been.calledOnce;
                 });
         });
 
@@ -343,10 +295,6 @@ describe('northbound-api', function () {
                     expect(image.status).to.equal('OK');
                     expect(image.iso).to.equal(testIso.name);
 
-                    expect(stubGetOneImageByNameVersion).to.have.been.calledOnce;
-                    expect(stubCreateSymbolLink).to.have.been.calledOnce;
-                    expect(stubAddimage).to.have.been.calledOnce;
-
                     expect(verifyMountContent(testImage.name, testImage.version)).to.equal(true);
 
                     done();
@@ -359,7 +307,6 @@ describe('northbound-api', function () {
                 .expect(200)
                 .expect(function (res) {
                     expect(res.body).to.be.an("Array").with.length(1);
-                    expect(stubFindImagesByQuery).to.have.been.calledOnce;
                     expect(res.body[0].name).to.equal(testImage.name);
                     expect(res.body[0].version).to.equal(testImage.version);
 
@@ -372,7 +319,6 @@ describe('northbound-api', function () {
                 .expect(200)
                 .expect(function (res) {
                     expect(res.body).to.be.an("Array");
-                    expect(stubDeleteImageByQuery).to.have.been.calledOnce;
                     expect(res.body[0].name).to.equal(testImage.name);
                     expect(res.body[0].version).to.equal(testImage.version);
                 });
@@ -381,10 +327,6 @@ describe('northbound-api', function () {
         it("should put one Images file with using isoweb", function (done) {
 
             this.timeout(5000);
-
-            // setTimeout(function(){
-            //     console.log('Exit timeout');
-            // }, 500000);
 
             copyTestIsoToStore();
 
@@ -398,10 +340,6 @@ describe('northbound-api', function () {
                     expect(image.version).to.equal(testImage.version);
                     expect(image.status).to.equal('OK');
                     expect(image.iso).to.equal(testIso.name);
-
-                    expect(stubGetOneImageByNameVersion).to.have.been.calledOnce;
-                    expect(stubCreateSymbolLink).to.have.been.calledOnce;
-                    expect(stubAddimage).to.have.been.calledOnce;
 
                     expect(verifyMountContent(testImage.name, testImage.version)).to.equal(true);
 
