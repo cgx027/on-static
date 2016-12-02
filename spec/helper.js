@@ -13,8 +13,12 @@ global.onStaticContext = index.contextFactory();
 global.dihelper = onStaticContext.helper;
 
 helper.setupInjector(_.flattenDeep([
-        onStaticContext.injectables
-    ]));
+    onStaticContext.injectables
+]));
+
+// Suppress console log in unit test
+helper.injector.get('Services.Configuration')
+    .set('minLogLevel', 0);
 
 helper.startServer = function (endpoints) {
     helper.injector.get('Services.Configuration')

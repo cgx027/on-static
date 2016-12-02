@@ -16,6 +16,7 @@
     "isoDir": "./static/iso",
     "microkernelDir": "./static/common",
     "inventoryFile": "./inventory.json",
-    "httpTimeout": 86400000
+    "httpTimeout": 86400000,
+    "minLogLevel": 0
 }
 

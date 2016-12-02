@@ -4,8 +4,6 @@
 'use strict';
 
 describe('Extensions', function () {
-    helper.before();
-    helper.after();
 
     describe('String', function () {
         it('should format string literals', function () {

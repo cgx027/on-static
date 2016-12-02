@@ -32,7 +32,11 @@ describe('database service', function () {
 
     before('setup config', function () {
         setupConfig();
-        database = helper.injector.get('Services.Database');
+
+        var Database = helper.injector.get('Services.Database');
+        database = new Database();
+        database.load();
+
         lowdb = helper.injector.get('lowdb');
     });
 

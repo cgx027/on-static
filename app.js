@@ -43,12 +43,16 @@ function Runner(
     ];
 
     function start() {
+        var inventory = new Inventory();
+
+        inventory.initialize();
+
         return Promise.resolve()
             .then(function(){
                 return fsOp.unmountAllIso();
             })
             .then(function(){
-                return Inventory.loadConfigAtBoot();
+                return inventory.loadConfigAtBoot();
             })
             .then(function () {
                 var endpoints = configuration.get('httpEndpoints', defaultEndpoints);
