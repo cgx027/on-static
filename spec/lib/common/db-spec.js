@@ -5,6 +5,7 @@
 
 describe('database service', function () {
     var sandbox = sinon.sandbox.create();
+    var path = helper.injector.get('path');
     var database;
     var lowdb;
 
@@ -28,13 +29,14 @@ describe('database service', function () {
     };
 
     var allImages = testData.images;
-    var image = allImages[0];
+    var image = allImages[1];
+    var testDbFile = path.join(process.cwd(), './spec/data/inventory_db_test.json');
 
     before('setup config', function () {
         setupConfig();
 
         database = helper.injector.get('Services.Database');
-        database.load();
+        database.load(testDbFile);
 
         lowdb = helper.injector.get('lowdb');
     });
@@ -45,8 +47,6 @@ describe('database service', function () {
     });
 
     function setupConfig() {
-        return helper.injector.get('Services.Configuration')
-            .set('inventoryFile', './spec/data/inventory_db_test.json');
     }
 
     function restoreConfig() {
@@ -60,48 +60,44 @@ describe('database service', function () {
     describe("test database service", function () {
 
         it("should return all database", function () {
-            return database.load(function(){
-                return database.getAllImages()
-                    .should.eventually.deep.equal(allImages);
-            });
+            return database.load(testDbFile)
+                .then(function(){
+                    return database.findImagesByQuery()
+                        .should.eventually.deep.equal(allImages);
+                });
         });
+
 
         it("should return one queried images", function () {
             var query = {
                 name: 'centos',
-                version: '7.0'
+                version: '8.0'
             };
 
             return database.findOneImageByQuery(query)
-                .then(function(){
-                    return database.findOneImageByQuery(query)
-                        .should.eventually.deep.equal(image);
-                });
+                .should.eventually.deep.equal(image);
         });
 
         it("should return one queried images with name and version", function () {
             var name = 'centos',
-                version = '7.0';
+                version = '8.0';
 
             return database.findOneImageByNameVersion(name, version)
-                .then(function(){
-                    return database.findOneImageByQuery({name: name, version: version})
-                        .should.eventually.deep.equal(image);
-                });
+                .should.eventually.deep.equal(image);
         });
 
         it("should update selected image", function () {
             var query = {
                 name: 'centos',
-                version: '7.0'
+                version: '8.0'
             };
 
             var data = {status: "Failed"};
             var updatedImage = {
-                "id": "b6b3e3be-c799-4af4-86c8-09a99d3aa7c7",
-                "iso": "centos-7.0.iso",
+                "id": "c6b3e3be-c799-4af4-86c8-09a99d3aa7c7",
+                "iso": "centos-8.0.iso",
                 "name": "centos",
-                "version": "7.0",
+                "version": "8.0",
                 "status": "Failed"
             };
 
@@ -118,15 +114,15 @@ describe('database service', function () {
 
         it("should update status of selected image", function () {
             var name = 'centos',
-                version = '7.0';
+                version = '8.0';
 
             var status = 'Failed';
 
             var updatedImage = {
-                "id": "b6b3e3be-c799-4af4-86c8-09a99d3aa7c7",
-                "iso": "centos-7.0.iso",
+                "id": "c6b3e3be-c799-4af4-86c8-09a99d3aa7c7",
+                "iso": "centos-8.0.iso",
                 "name": "centos",
-                "version": "7.0",
+                "version": "8.0",
                 "status": "Failed"
             };
 
@@ -137,14 +133,14 @@ describe('database service', function () {
                 })
                 .then(function(){
                     // restore test data
-                    return database.updateImageStatus(name, version, image);
+                    return database.updateImageStatus(name, version, "OK");
                 });
         });
 
         it("should delete selected image", function () {
             var query = {
                 name: 'centos',
-                version: '7.0'
+                version: '8.0'
             };
 
             return database.deleteImage(query)
@@ -157,6 +153,5 @@ describe('database service', function () {
                     return database.addImage(image);
                 });
         });
-
     });
 });
