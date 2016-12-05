@@ -54,7 +54,7 @@ describe('database service', function () {
             .set('inventoryFile', './inventory.json');
     }
 
-    beforeEach("reset stubs", function () {
+    beforeEach("setup stubs", function () {
     });
 
     describe("test database service", function () {
