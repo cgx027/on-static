@@ -33,8 +33,7 @@ describe('database service', function () {
     before('setup config', function () {
         setupConfig();
 
-        var Database = helper.injector.get('Services.Database');
-        database = new Database();
+        database = helper.injector.get('Services.Database');
         database.load();
 
         lowdb = helper.injector.get('lowdb');

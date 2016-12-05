@@ -23,7 +23,7 @@ function Runner(
     Logger,
     fsOp,
     Promise,
-    Inventory
+    inventory
 ) {
     var logger = Logger.initialize("app");
 
@@ -43,8 +43,6 @@ function Runner(
     ];
 
     function start() {
-        var inventory = new Inventory();
-
         inventory.initialize();
 
         return Promise.resolve()
