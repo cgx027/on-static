@@ -46,12 +46,6 @@ function Runner(
         inventory.initialize();
 
         return Promise.resolve()
-            .then(function(){
-                return fsOp.unmountAllIso();
-            })
-            .then(function(){
-                return inventory.loadConfigAtBoot();
-            })
             .then(function () {
                 var endpoints = configuration.get('httpEndpoints', defaultEndpoints);
                 services = Promise.map(endpoints, function (endpoint) {
@@ -61,6 +55,12 @@ function Runner(
                 });
 
                 return services;
+            })
+            .then(function(){
+                return fsOp.unmountAllIso();
+            })
+            .then(function(){
+                return inventory.loadConfigAtBoot();
             });
     }
 
