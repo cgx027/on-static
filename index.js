@@ -25,8 +25,8 @@ function contextFactory(di, directory) {
                 this.injectables
             ]));
 
-            this.app = injector.get('app'),
-                this.logger = injector.get('Logger')
+            this.app = injector.get('app');
+            this.logger = injector.get('Logger')
                 .initialize('Http.Server');
             self.injector = injector;
 

@@ -32,12 +32,12 @@ function Runner(
     var defaultEndpoints = [
         {
             "address": "0.0.0.0",
-            "port": 9090,
+            "port": 7070,
             "routers": "northbound"
         },
         {
             "address": "0.0.0.0",
-            "port": 9080,
+            "port": 9090,
             "routers": "southbound"
         }
     ];

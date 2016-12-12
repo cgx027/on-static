@@ -210,7 +210,7 @@ describe('inventory service', function () {
 
             sandbox.stub(db, 'findImagesByQuery').resolves([testImage]);
             sandbox.stub(fsOp, 'unmountIso').resolves({});
-            sandbox.stub(fsOp, 'removeDirAndEmptyParent').returns();
+            sandbox.stub(fsOp, 'removeDirAndEmptyParentSync').returns();
             db.deleteImage.restore();
             sandbox.stub(db, 'deleteImage').resolves({});
 
@@ -245,7 +245,7 @@ describe('inventory service', function () {
         it("should download iso", function () {
 
             sandbox.stub(fsOp, 'downloadIso').resolves({});
-            sandbox.stub(fsOp, 'getFileSize').resolves(1000);
+            sandbox.stub(fsOp, 'getFileSizeSync').resolves(1000);
 
             return inventory.downloadIso(testImage, 'http://fake-site.com/test.iso')
                 .should.be.resolved;
@@ -259,8 +259,8 @@ describe('inventory service', function () {
 
         it("should fail download iso with zero file size", function () {
 
-            fsOp.getFileSize.restore();
-            sandbox.stub(fsOp, 'getFileSize').returns(0);
+            fsOp.getFileSizeSync.restore();
+            sandbox.stub(fsOp, 'getFileSizeSync').returns(0);
 
             fsOp.downloadIso.restore();
             sandbox.stub(fsOp, 'downloadIso').resolves({});
@@ -271,8 +271,8 @@ describe('inventory service', function () {
 
         it("should fail download", function () {
 
-            fsOp.getFileSize.restore();
-            sandbox.stub(fsOp, 'getFileSize').returns(1000);
+            fsOp.getFileSizeSync.restore();
+            sandbox.stub(fsOp, 'getFileSizeSync').returns(1000);
 
             fsOp.downloadIso.restore();
             sandbox.stub(fsOp, 'downloadIso').rejects({});
@@ -283,8 +283,8 @@ describe('inventory service', function () {
 
         it("should fail download with iso file removed", function () {
 
-            fsOp.getFileSize.restore();
-            sandbox.stub(fsOp, 'getFileSize').returns(1000);
+            fsOp.getFileSizeSync.restore();
+            sandbox.stub(fsOp, 'getFileSizeSync').returns(1000);
 
             fsOp.downloadIso.restore();
             sandbox.stub(fsOp, 'downloadIso').rejects({});
@@ -355,7 +355,7 @@ describe('inventory service', function () {
 
         it("should setup dir", function () {
 
-            sandbox.stub(fsOp, 'checkPathReadable').returns(true);
+            sandbox.stub(fsOp, 'checkPathReadableSync').returns(true);
 
             sandbox.stub(fsOp, 'mountIso').resolves({});
 
@@ -367,8 +367,8 @@ describe('inventory service', function () {
 
         it("should not setup dir if path not readable", function () {
 
-            fsOp.checkPathReadable.restore();
-            sandbox.stub(fsOp, 'checkPathReadable').returns(false);
+            fsOp.checkPathReadableSync.restore();
+            sandbox.stub(fsOp, 'checkPathReadableSync').returns(false);
 
             fsOp.mountIso.restore();
             sandbox.stub(fsOp, 'mountIso').resolves({});
@@ -379,8 +379,8 @@ describe('inventory service', function () {
 
         it("should not setup dir if fail mount ISO", function () {
 
-            fsOp.checkPathReadable.restore();
-            sandbox.stub(fsOp, 'checkPathReadable').returns(true);
+            fsOp.checkPathReadableSync.restore();
+            sandbox.stub(fsOp, 'checkPathReadableSync').returns(true);
 
             fsOp.mountIso.restore();
             sandbox.stub(fsOp, 'mountIso').rejects({});
