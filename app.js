@@ -12,7 +12,7 @@ di.annotate(Runner, new di.Inject(
     'Http.Server',
     'Services.Configuration',
     'Logger',
-    'fs-operation',
+    'Fs.Operation',
     'Promise',
     'Services.Inventory'
 )

@@ -6,7 +6,7 @@
 describe('inventory service', function () {
     var path = helper.injector.get('path');
     var fs = helper.injector.get('fs');
-    var fsOp = helper.injector.get('fs-operation');
+    var fsOp = helper.injector.get('Fs.Operation');
     var Errors = helper.injector.get('Errors');
     var _ = helper.injector.get('_');
     var inventory;

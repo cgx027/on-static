@@ -10,7 +10,7 @@ describe('northbound-api', function () {
     var fs = helper.injector.get('fs');
     var path = helper.injector.get('path');
     var _ = helper.injector.get('_');
-    var fsOp = helper.injector.get('fs-operation');
+    var fsOp = helper.injector.get('Fs.Operation');
     var inventory;
     var uploader;
     var configuration;
