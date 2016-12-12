@@ -148,7 +148,7 @@ describe('northbound-api', function () {
             osName + '/' + osVersion + '/');
 
         fsOp.unmountIso(fakeMountDir);
-        fsOp.removeDirAndEmptyParent(fakeMountDir);
+        fsOp.removeDirAndEmptyParentSync(fakeMountDir);
     }
 
     before('setup config', function () {
