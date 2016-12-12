@@ -12,7 +12,7 @@ di.annotate(Runner, new di.Inject(
     'Http.Server',
     'Services.Configuration',
     'Logger',
-    'fs-operation',
+    'Fs.Operation',
     'Promise',
     'Services.Inventory'
 )
@@ -43,19 +43,18 @@ function Runner(
     ];
 
     function start() {
-        inventory.initialize();
+        return Promise.try(function(){
+            inventory.initialize();
 
-        return Promise.resolve()
-            .then(function () {
-                var endpoints = configuration.get('httpEndpoints', defaultEndpoints);
-                services = Promise.map(endpoints, function (endpoint) {
-                    return new HttpService(endpoint);
-                }).each(function (service) {
-                    return service.start();
-                });
+            var endpoints = configuration.get('httpEndpoints', defaultEndpoints);
+            services = Promise.map(endpoints, function (endpoint) {
+                return new HttpService(endpoint);
+            }).each(function (service) {
+                return service.start();
+            });
 
-                return services;
-            })
+            return services;
+        })
             .then(function(){
                 return fsOp.unmountAllIso();
             })
