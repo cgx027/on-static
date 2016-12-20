@@ -7,6 +7,7 @@
     git clone https://github.com/cgx027/on-static.git
     cd on-static
     npm install
+    sudo node index # PLEASE RUN as root
 
 ### Use the API
 
