@@ -4,6 +4,7 @@
   "description": "Static file server for RackHD users",
   "main": "index.js",
   "scripts": {
+    "postinstall": "./download.sh",
     "test": "./node_modules/.bin/mocha $(find spec -name '*-spec.js') -R spec --require spec/helper.js",
     "debug": "./node_modules/.bin/mocha debug $(find spec -name '*-spec.js') -R spec --require spec/helper.js"
   },
