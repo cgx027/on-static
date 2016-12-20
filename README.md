@@ -1,5 +1,28 @@
 # on-static
 
+## Quick Start
+
+### Install and Run
+
+    git clone https://github.com/cgx027/on-static.git
+    cd on-static
+    npm install
+    sudo node index # PLEASE RUN as root
+
+### Use the API
+
+Create a Ubuntu image repo with version 14.04 (Trusty):
+
+    curl -X PUT "http://ip-of-on-static:7070/images?name=ubuntu&version=14.04&isoweb=http://releases.ubuntu.com/14.04/ubuntu-14.04.4-server-amd64.iso"
+
+The new Ubuntu image repo can be found at:
+
+    http://ip-of-on-static:9090
+
+Now Ubuntu image is up and running.
+
+## Introduction
+
 __`on-static` is a tool that help [RackHD](https://github.com/rackhd) users to
 manage static file resources like os images and microkernel images.
 
@@ -9,8 +32,6 @@ As long as users trying to scale up the managed nodes, they would think to move 
 
 Furture support may include management of other static resources
 like microkernel and overlayfs. Furture plan also includes management of skupack files but __this is not implemented so far.__
-
-## Introduction
 
 With `on-static`, users can
 
